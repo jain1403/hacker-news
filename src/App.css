@@ -1,3 +1,8 @@
+Google
+Last account activity: 2 minutes ago
+Details
+
+
 .App {
   text-align: center;
 }
@@ -26,6 +31,33 @@
 
 .App-link {
   color: #61dafb;
+}
+.mainContainer {
+  min-height:100vh;
+  margin: 0rem 5rem;
+  background:#f6f6ef;
+}
+.header{
+  display: flex;
+  background: #ff6600d6;
+  font-size: 18px;
+  padding: 5px 8px;
+  color: white;
+  font-weight: 500;
+  border-left:10px solid black;
+  margin-bottom: 10px;
+}
+.headerSpan{
+  margin-right:15px;
+  padding: 5px 0px;
+  cursor: pointer;
+}
+.showMore{
+  padding: 5px;
+  color: #ff6600;
+}
+.contentWrap{
+  padding-top:20px;
 }
 
 @keyframes App-logo-spin {

@@ -19,7 +19,7 @@ class topStories extends Component {
     }
 
     loadStories = (storyType, from, to) => {
-        this.setState({ loader: true,stories:[] })
+        this.setState({ loader: true, stories: [] })
         Service.getStories(storyType).then((data) => {
             this.setState({ allStories: [...data] });
             this.loadStory(data.splice(from, to), to)
@@ -35,8 +35,8 @@ class topStories extends Component {
 
     showMore = () => {
         let from = this.state.index;
-        let to = this.state.index+30;
-        this.loadStory(this.state.allStories.splice(from, 30),to)
+        let to = this.state.index + 30;
+        this.loadStory(this.state.allStories.splice(from, 30), to)
     }
 
     domain_from_url = (url = '') => {
@@ -62,10 +62,9 @@ class topStories extends Component {
             <DotLoader
                 css={override}
                 size={50}
-                color={"#36D7B7"}
+                color={"#ff6600"}
                 loading={this.state.loading}
             />
-            Loading....
         </div>;
         if (!this.state.loader) {
             stories = this.state.stories.map((element, index) => {
@@ -78,14 +77,14 @@ class topStories extends Component {
             <div>
                 <div className="mainContainer">
                     <div className="header">
-                        <span onClick={() => this.loadStories('topstories', 0, 30)}>Top Stories</span>
-                        <span onClick={() => this.loadStories('newstories', 0, 30)}>New Stories</span>
-                        <span onClick={() => this.loadStories('beststories', 0, 30)}>Best Stories</span>
+                        <span className="headerSpan" activeClassName='is-active' onClick={() => this.loadStories('topstories', 0, 30)}>Top Stories</span>
+                        <span className="headerSpan" onClick={() => this.loadStories('newstories', 0, 30)}>New Stories</span>
+                        <span className="headerSpan" onClick={() => this.loadStories('beststories', 0, 30)}>Best Stories</span>
                     </div>
                     {stories}
-                    <div onClick={this.showMore}>
+                    {!this.state.loader ? (<div className="showMore" onClick={this.showMore}>
                         Show more
-                    </div>
+                    </div>) : null}
                 </div>
             </div>
         );
