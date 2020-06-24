@@ -3,7 +3,6 @@ import axios from '../axios-orders';
 const getStories = (getStories) => {
     let promise = new Promise((resolve, reject) => {
         axios.get(`/${getStories}.json`).then((res) => {
-            console.log(res);
             resolve(res.data);
         }).catch((err) => {
             reject(err);

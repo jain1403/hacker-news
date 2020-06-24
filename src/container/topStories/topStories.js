@@ -1,24 +1,45 @@
 import React, { Component } from 'react';
 import Service from '../../services/getStories';
-import Spinner from '../../UI/Spinner/Spinner';
-import TopStoriesRender from '../../components/topStories/topStories'
+import { css } from "@emotion/core";
+import TopStoriesRender from '../../components/topStories/topStories';
+import DotLoader from "react-spinners/DotLoader";
+
 
 class topStories extends Component {
 
     state = {
-        stories:[],
-        loader:true
+        stories: [],
+        loader: true,
+        allStories: [],
+        index: 0
     }
 
     componentDidMount() {
-        Service.getStories('topstories').then((data) => {
-            Service.getStoryIds(data.splice(0, 30)).then((res) => {
-                this.setState({stories:[...res],loader:false})
-            });
+        this.loadStories('topstories', 0, 30)
+    }
+
+    loadStories = (storyType, from, to) => {
+        this.setState({ loader: true,stories:[] })
+        Service.getStories(storyType).then((data) => {
+            this.setState({ allStories: [...data] });
+            this.loadStory(data.splice(from, to), to)
         })
     }
 
-     domain_from_url= (url = '') => {
+    loadStory(data, to) {
+        Service.getStoryIds(data).then((res) => {
+            let response = this.state.stories.concat(res);
+            this.setState({ stories: [...response], loader: false, index: to })
+        });
+    }
+
+    showMore = () => {
+        let from = this.state.index;
+        let to = this.state.index+30;
+        this.loadStory(this.state.allStories.splice(from, 30),to)
+    }
+
+    domain_from_url = (url = '') => {
         var result
         var match
         if (match = url.match(/^(?:https?:\/\/)?(?:[^@\n]+@)?(?:www\.)?([^:\/\n\?\=]+)/im)) {
@@ -31,11 +52,23 @@ class topStories extends Component {
     }
 
     render() {
-        console.log("------",this.state.stories)
-        let stories = <Spinner></Spinner>;
-        if(!this.state.loader){
-            stories = this.state.stories.map((element,index)=>{
-                console.log(element);
+        const override = css`
+        display: block;
+        margin: 0 auto;
+        border-color: red;
+        margin-top: 17%;
+      `;
+        let stories = <div>
+            <DotLoader
+                css={override}
+                size={50}
+                color={"#36D7B7"}
+                loading={this.state.loading}
+            />
+            Loading....
+        </div>;
+        if (!this.state.loader) {
+            stories = this.state.stories.map((element, index) => {
                 element.index = index + 1;
                 element.domainURL = this.domain_from_url(element.url)
                 return (<TopStoriesRender data={element}></TopStoriesRender>);
@@ -43,7 +76,17 @@ class topStories extends Component {
         }
         return (
             <div>
-                {stories}
+                <div className="mainContainer">
+                    <div className="header">
+                        <span onClick={() => this.loadStories('topstories', 0, 30)}>Top Stories</span>
+                        <span onClick={() => this.loadStories('newstories', 0, 30)}>New Stories</span>
+                        <span onClick={() => this.loadStories('beststories', 0, 30)}>Best Stories</span>
+                    </div>
+                    {stories}
+                    <div onClick={this.showMore}>
+                        Show more
+                    </div>
+                </div>
             </div>
         );
     }

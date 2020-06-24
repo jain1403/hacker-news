@@ -3,7 +3,6 @@ import './topStories.css';
 
 class topStoriesRender extends Component {
     render() {
-        console.log(this.props);
         return (
             <div className="flexWrapper">
                 <span>{this.props.data && this.props.data.index}.</span>
